@@ -1,0 +1,10 @@
+{
+    "framework": "jasmine",
+    "launch_in_dev": ["PhantomJS"],
+    "src_files": [
+        "bower_components/underscore/underscore.js",
+        "bower_components/backbone/backbone.js",
+        "backbone-nested.js",
+        "test/*.js"
+    ]
+}
