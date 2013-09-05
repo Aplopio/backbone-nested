@@ -16,7 +16,7 @@
             id = this.idAttribute || "id",
             modelToSet, modelsToAdd = [], modelsToRemove = [];
 
-        if(options.unset && relation) delete relation.parent;        
+        if(options.unset && relation) delete relation.parent;
 
         if(this.relations && _.has(this.relations, attr)) {
 
@@ -164,15 +164,15 @@
     };
 
     Backbone.Model.prototype.toJSON = function(options) {
-      var attrs = _.clone(this.attributes);
+        var attrs = _.clone(this.attributes);
 
-      _.each(this.relations, function(rel, key) {
-        if (_.has(attrs, key)) {
-          attrs[key] = attrs[key].toJSON();
-        }
-      });
+        _.each(this.relations, function(rel, key) {
+            if (_.has(attrs, key)) {
+                attrs[key] = attrs[key].toJSON();
+            }
+        });
 
-      return attrs;
+        return attrs;
     };
 
     Backbone.Collection.prototype.resetRelations = function(options) {
@@ -182,21 +182,21 @@
                     model.get(key).trigger('reset', model, options);
                 }
             });
-        })
+        });
     };
 
     Backbone.Collection.prototype.reset = function(models, options) {
-      options || (options = {});
-      for (var i = 0, l = this.models.length; i < l; i++) {
-        this._removeReference(this.models[i]);
-      }
-      options.previousModels = this.models;
-      this._reset();
-      this.add(models, _.extend({silent: true}, options));
-      if (!options.silent) { 
-        this.trigger('reset', this, options);
-        this.resetRelations(options);
-      }
-      return this;
+        options || (options = {});
+        for (var i = 0, l = this.models.length; i < l; i++) {
+            this._removeReference(this.models[i]);
+        }
+        options.previousModels = this.models;
+        this._reset();
+        this.add(models, _.extend({silent: true}, options));
+        if (!options.silent) {
+            this.trigger('reset', this, options);
+            this.resetRelations(options);
+        }
+        return this;
     };
 })(Backbone);
