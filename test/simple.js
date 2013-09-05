@@ -1,3 +1,5 @@
+/*global describe, beforeEach, afterEach, it, expect,
+ jasmine */
 describe("Simple Tests", function() {
 	var Book, book;
 
