@@ -11,14 +11,17 @@
     var Model = Backbone.Model,
         Collection = Backbone.Collection;
 
+    Backbone.Model.prototype.relationAttribute = 'relations';
+
     Backbone.Model.prototype.setRelation = function(attr, val, options) {
         var relation = this.attributes[attr],
             id = this.idAttribute || "id",
+            relationAttribute = this.relationAttribute,
             modelToSet, modelsToAdd = [], modelsToRemove = [];
 
         if(options.unset && relation) delete relation.parent;
 
-        if(this.relations && _.has(this.relations, attr)) {
+        if(this[relationAttribute] && _.has(this[relationAttribute], attr)) {
 
             // If the relation already exists, we don't want to replace it, rather
             // update the data within it whether it is a collection or model
@@ -87,7 +90,7 @@
 
             options._parent = this;
 
-            val = new this.relations[attr](val, options);
+            val = new this[relationAttribute][attr](val, options);
             val.parent = this;
         }
 
@@ -166,7 +169,7 @@
     Backbone.Model.prototype.toJSON = function(options) {
         var attrs = _.clone(this.attributes);
 
-        _.each(this.relations, function(rel, key) {
+        _.each(this[this.relationAttribute], function(rel, key) {
             if (_.has(attrs, key)) {
                 attrs[key] = attrs[key].toJSON();
             }
@@ -177,7 +180,7 @@
 
     Backbone.Collection.prototype.resetRelations = function(options) {
         _.each(this.models, function(model) {
-            _.each(model.relations, function(rel, key) {
+            _.each(model[model.relationAttribute], function(rel, key) {
                 if(model.get(key) instanceof Backbone.Collection) {
                     model.get(key).trigger('reset', model, options);
                 }
