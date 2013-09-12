@@ -4,6 +4,11 @@ describe("Simple Tests", function() {
     var book;
 
     beforeEach(function() {
+        this.addMatchers({
+            toBeInstanceOf: function(expected) {
+                return this.actual instanceof expected;
+            }
+        });
         book = new Book();
 
         book.set({
@@ -38,8 +43,8 @@ describe("Simple Tests", function() {
           "pages": []
         });
 
-        expect(book1.get('author') instanceof Backbone.Model).toBeTruthy();
-        expect(book1.get('pages') instanceof Backbone.Collection).toBeTruthy();
+        expect(book1.get('author')).toBeInstanceOf(Backbone.Model);
+        expect(book1.get('pages')).toBeInstanceOf(Backbone.Collection);
     });
 
     it("Should build a model relation", function() {
