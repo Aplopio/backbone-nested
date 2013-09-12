@@ -22,7 +22,7 @@
         if(this.schema && _.has(this.schema, attr)) {
             schema = this.schema[attr];
 
-            if(schema.type == 'related') {
+            if(schema.type == 'related' && _.isFunction(schema.constructor)) {
 
                 // If the relation already exists, we don't want to replace it, rather
                 // update the data within it whether it is a collection or model
