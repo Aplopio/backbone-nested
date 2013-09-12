@@ -188,8 +188,9 @@
     Backbone.Collection.prototype.resetRelations = function(options) {
         _.each(this.models, function(model) {
             _.each(model.schema, function(rel, key) {
-                if(model.get(key) instanceof Backbone.Collection) {
-                    model.get(key).trigger('reset', model, options);
+                var val = model.get(key);
+                if(val instanceof Backbone.Collection) {
+                    val.trigger('reset', val, options);
                 }
             });
         });
