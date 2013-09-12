@@ -61,6 +61,15 @@ describe("Simple Tests", function() {
         expect(book.get('pages').at(1).get('words')).toBe(450);
     });
 
+    it("Should build a date relation", function() {
+        book.set({
+            released_on: '2013-09-12T07:07:00.825Z'
+        });
+        //console.log(book.get('released_on'));
+        expect(book.get('released_on')).toBeInstanceOf(Date);
+        expect(book.get('released_on').getFullYear()).toEqual(2013);
+    });
+
     it("Should provide backwards references to the parent models", function() {
         expect(book.get('author').parent).toEqual(book);
         expect(book.get('pages').at(0).collection.parent).toEqual(book);

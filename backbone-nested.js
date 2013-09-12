@@ -17,7 +17,8 @@
         var relation = this.attributes[attr],
             id = this.idAttribute || "id",
             relationAttribute = this.relationAttribute,
-            modelToSet, modelsToAdd = [], modelsToRemove = [];
+            modelToSet, modelsToAdd = [], modelsToRemove = [],
+            origVal = val;
 
         if(options.unset && relation) delete relation.parent;
 
@@ -92,6 +93,9 @@
 
             val = new this[relationAttribute][attr](val, options);
             val.parent = this;
+            if(!(val instanceof Backbone.Model || val instanceof Backbone.Collection)) {
+                val = new this[relationAttribute][attr](origVal);
+            }
         }
 
         return val;

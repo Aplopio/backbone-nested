@@ -3,6 +3,7 @@
 var Book = Backbone.Model.extend({
     relations: {
         "author": Backbone.Model,
-        "pages" : Backbone.Collection
+        "pages" : Backbone.Collection,
+        "released_on": Date
     }
 });
