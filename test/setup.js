@@ -2,8 +2,17 @@
 
 var Book = Backbone.Model.extend({
     schema: {
-        "author": Backbone.Model,
-        "pages" : Backbone.Collection,
-        "released_on": Date
+        author: {
+            type: 'related',
+            constructor: Backbone.Model
+        },
+        pages: {
+            type: 'related',
+            constructor: Backbone.Collection
+        },
+        released_on: {
+            type: 'datetime',
+            constructor: Date
+        }
     }
 });

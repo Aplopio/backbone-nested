@@ -159,9 +159,12 @@ describe("Simple Tests", function() {
         });
 
         var Bucket = Backbone.Model.extend({
-          schema: {
-            'things': Things
-          }
+            schema: {
+                things: {
+                    type: 'related',
+                    constructor: Things
+                }
+            }
         });
 
         var Buckets = Backbone.Collection.extend({

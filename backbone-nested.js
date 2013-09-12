@@ -11,88 +11,94 @@
     var Model = Backbone.Model,
         Collection = Backbone.Collection;
 
-    Backbone.Model.prototype.setRelation = function(attr, val, options) {
+    Backbone.Model.prototype.getParsedValue = function(attr, val, options) {
         var relation = this.attributes[attr],
+            schema,
             id = this.idAttribute || "id",
-            modelToSet, modelsToAdd = [], modelsToRemove = [],
-            origVal = val;
+            modelToSet, modelsToAdd = [], modelsToRemove = [];
 
         if(options.unset && relation) delete relation.parent;
 
         if(this.schema && _.has(this.schema, attr)) {
+            schema = this.schema[attr];
 
-            // If the relation already exists, we don't want to replace it, rather
-            // update the data within it whether it is a collection or model
-            if(relation && relation instanceof Collection) {
+            if(schema.type == 'related') {
 
-                // If the val that is being set is already a collection, use the models
-                // within the collection.
-                if(val instanceof Collection || val instanceof Array){
-                    val = val.models || val;
-                    modelsToAdd = _.clone(val);
+                // If the relation already exists, we don't want to replace it, rather
+                // update the data within it whether it is a collection or model
+                if(relation && relation instanceof Collection) {
 
-                    relation.each(function(model, i) {
+                    // If the val that is being set is already a collection, use the models
+                    // within the collection.
+                    if(val instanceof Collection || val instanceof Array){
+                        val = val.models || val;
+                        modelsToAdd = _.clone(val);
 
-                        // If the model does not have an "id" skip logic to detect if it already
-                        // exists and simply add it to the collection
-                        if(typeof model[id] == 'undefined') return;
+                        relation.each(function(model, i) {
 
-                        // If the incoming model also exists within the existing collection,
-                        // call set on that model. If it doesn't exist in the incoming array,
-                        // then add it to a list that will be removed.
-                        var rModel = _.find(val, function(_model) {
-                            return _model[id] === model[id];
+                            // If the model does not have an "id" skip logic to detect if it already
+                            // exists and simply add it to the collection
+                            if(typeof model[id] == 'undefined') return;
+
+                            // If the incoming model also exists within the existing collection,
+                            // call set on that model. If it doesn't exist in the incoming array,
+                            // then add it to a list that will be removed.
+                            var rModel = _.find(val, function(_model) {
+                                return _model[id] === model[id];
+                            });
+
+                            if(rModel) {
+                                model.set(rModel.toJSON ? rModel.toJSON() : rModel);
+
+                                // Remove the model from the incoming list because all remaining models
+                                // will be added to the relation
+                                modelsToAdd.splice(i,1);
+                            } else {
+                                modelsToRemove.push(model);
+                            }
+
                         });
 
-                        if(rModel) {
-                            model.set(rModel.toJSON ? rModel.toJSON() : rModel);
-
-                            // Remove the model from the incoming list because all remaining models
-                            // will be added to the relation
-                            modelsToAdd.splice(i,1);
-                        } else {
-                            modelsToRemove.push(model);
-                        }
-
-                    });
-
-                    _.each(modelsToRemove, function(model) {
-                        relation.remove(model);
-                    });
-
-                    relation.add(modelsToAdd);
-
-                } else {
-
-                    // The incoming val that is being set is not an array or collection, then it represents
-                    // a single model.  Go through each of the models in the existing relation and remove
-                    // all models that aren't the same as this one (by id). If it is the same, call set on that
-                    // model.
-
-                    relation.each(function(model) {
-                        if(val[id] === model[id]) {
-                            model.set(val);
-                        } else {
+                        _.each(modelsToRemove, function(model) {
                             relation.remove(model);
-                        }
-                    });
+                        });
+
+                        relation.add(modelsToAdd);
+
+                    } else {
+
+                        // The incoming val that is being set is not an array or collection, then it represents
+                        // a single model.  Go through each of the models in the existing relation and remove
+                        // all models that aren't the same as this one (by id). If it is the same, call set on that
+                        // model.
+
+                        relation.each(function(model) {
+                            if(val[id] === model[id]) {
+                                model.set(val);
+                            } else {
+                                relation.remove(model);
+                            }
+                        });
+                    }
+
+                    return relation;
                 }
 
-                return relation;
+                if(relation && relation instanceof Model) {
+                    relation.set(val);
+                    return relation;
+                }
+
+                options._parent = this;
+
+                val = new schema.constructor(val, options);
+                val.parent = this;
             }
 
-            if(relation && relation instanceof Model) {
-                relation.set(val);
-                return relation;
+            else if(_.isFunction(schema.constructor)) {
+                val = new schema.constructor(val);
             }
 
-            options._parent = this;
-
-            val = new this.schema[attr](val, options);
-            val.parent = this;
-            if(!(val instanceof Backbone.Model || val instanceof Backbone.Collection)) {
-                val = new this.schema[attr](origVal);
-            }
         }
 
         return val;
@@ -136,7 +142,7 @@
             val = attrs[attr];
 
             // Inject in the relational lookup
-            val = this.setRelation(attr, val, options);
+            val = this.getParsedValue(attr, val, options);
 
             if (!_.isEqual(current[attr], val)) changes.push(attr);
             if (!_.isEqual(prev[attr], val)) {
