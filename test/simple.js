@@ -30,23 +30,6 @@ describe("Simple Tests", function() {
         });
     });
 
-    it("Should work with configurable relations attribute", function() {
-        var Book1 = Backbone.Model.extend({
-            relationAttribute: 'schema',
-            schema: {
-		        "author": Backbone.Model,
-		        "pages" : Backbone.Collection
-	        }
-        });
-        var book1 = new Book1({
-          "author": {},
-          "pages": []
-        });
-
-        expect(book1.get('author')).toBeInstanceOf(Backbone.Model);
-        expect(book1.get('pages')).toBeInstanceOf(Backbone.Collection);
-    });
-
     it("Should build a model relation", function() {
         expect(book.get('author').get('name')).toEqual('Heber J. Grant');
         expect(book.get('author').get('title')).toEqual('President');
@@ -176,7 +159,7 @@ describe("Simple Tests", function() {
         });
 
         var Bucket = Backbone.Model.extend({
-          relations: {
+          schema: {
             'things': Things
           }
         });
