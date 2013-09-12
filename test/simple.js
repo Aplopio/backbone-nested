@@ -44,7 +44,7 @@ describe("Simple Tests", function() {
         expect(book.get('pages').at(1).get('words')).toBe(450);
     });
 
-    it("Should build a date relation", function() {
+    it("Should work for any constructor", function() {
         book.set({
             released_on: '2013-09-12T07:07:00.825Z'
         });
