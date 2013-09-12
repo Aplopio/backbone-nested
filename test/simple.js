@@ -25,6 +25,23 @@ describe("Simple Tests", function() {
         });
     });
 
+    it("Should work with configurable relations attribute", function() {
+        var Book1 = Backbone.Model.extend({
+            relationAttribute: 'schema',
+            schema: {
+		        "author": Backbone.Model,
+		        "pages" : Backbone.Collection
+	        }
+        });
+        var book1 = new Book1({
+          "author": {},
+          "pages": []
+        });
+
+        expect(book1.get('author') instanceof Backbone.Model).toBeTruthy();
+        expect(book1.get('pages') instanceof Backbone.Collection).toBeTruthy();
+    });
+
     it("Should build a model relation", function() {
         expect(book.get('author').get('name')).toEqual('Heber J. Grant');
         expect(book.get('author').get('title')).toEqual('President');
