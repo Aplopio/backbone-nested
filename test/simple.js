@@ -1,16 +1,9 @@
 /*global describe, beforeEach, afterEach, it, expect,
- jasmine */
+ jasmine, Book, Book1 */
 describe("Simple Tests", function() {
-	var Book, book;
+	var book;
 
 	beforeEach(function() {
-		Book = Backbone.Model.extend({
-		    relations: {
-		      "author": Backbone.Model,
-		      "pages" : Backbone.Collection
-		    }
-		});
-
 		book = new Book();
 
 		book.set({
