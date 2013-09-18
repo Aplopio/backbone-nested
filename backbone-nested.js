@@ -19,6 +19,8 @@
 
         if(options.unset && relation) delete relation.parent;
 
+        if( val === null || typeof val === 'undefined' ) return val;
+
         if(this.schema && _.has(this.schema, attr)) {
             schema = this.schema[attr];
 

@@ -17,15 +17,15 @@ var Book = Backbone.Model.extend({
     schema: {
         author: {
             type: 'related',
-            constructor: Person
+            _constructor: Person
         },
         pages: {
             type: 'related',
-            constructor: Pages
+            _constructor: Pages
         },
         released_on: {
             type: 'datetime',
-            constructor: Date
+            _constructor: Date
         }
     }
 });

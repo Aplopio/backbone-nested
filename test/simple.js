@@ -53,6 +53,16 @@ describe("Simple Tests", function() {
         expect(book.get('released_on').getFullYear()).toEqual(2013);
     });
 
+    it("Should do nothing about null", function() {
+        book.set('released_on', null);
+        expect(book.get('released_on')).toBe(null);
+    });
+
+    it("Should do nothing about undefined", function() {
+        book.set('released_on', undefined);
+        expect(book.get('released_on')).toBe(undefined);
+    });
+
     it("Should provide backwards references to the parent models", function() {
         expect(book.get('author').parent).toEqual(book);
         expect(book.get('pages').at(0).collection.parent).toEqual(book);
@@ -162,7 +172,7 @@ describe("Simple Tests", function() {
             schema: {
                 things: {
                     type: 'related',
-                    constructor: Things
+                    _constructor: Things
                 }
             }
         });
