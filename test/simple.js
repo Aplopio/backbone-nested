@@ -36,6 +36,18 @@ describe("Simple Tests", function() {
         expect(book.get('author').get('age')).toEqual('47');
     });
 
+    it("Should set the model relation for already constructed value", function() {
+        book.unset( 'author' );
+        book.set({
+            author: new Person({
+                name : "Viky",
+                title: "UX engineer",
+                age  : 47
+            })
+        });
+        expect(book.get('author').get('name')).toEqual('Viky');
+    });
+
     it("Should build a collection relation", function() {
         expect(book.get('pages').length).toBe(2);
         expect(book.get('pages').at(0).get('number')).toBe(1);

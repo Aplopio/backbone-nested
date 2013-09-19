@@ -93,6 +93,10 @@
 
                 if(!_.isObject(val)) return val;
 
+                if(val instanceof schema._constructor) {
+                    return val;
+                }
+
                 options._parent = this;
 
                 val = new schema._constructor(val, options);
