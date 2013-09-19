@@ -86,21 +86,21 @@
                     return relation;
                 }
 
-                if(relation && relation instanceof Model) {
+                else if(relation && relation instanceof Model) {
                     relation.set(val);
                     return relation;
                 }
 
-                if(!_.isObject(val)) return val;
+                else if(!_.isObject(val)) return val;
 
-                if(val instanceof schema._constructor) {
+                else if(val instanceof schema._constructor) {
                     return val;
                 }
-
-                options._parent = this;
-
-                val = new schema._constructor(val, options);
-                val.parent = this;
+                else {
+                    options._parent = this;
+                    val = new schema._constructor(val, options);
+                    val.parent = this;
+                }
             }
 
             else if(_.isFunction(schema._constructor)) {
