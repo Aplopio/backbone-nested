@@ -186,7 +186,7 @@
 
         _.each(this.schema, function(rel, key) {
             if (_.has(attrs, key)) {
-                attrs[key] = attrs[key].toJSON();
+                attrs[key].toJSON && (attrs[key] = attrs[key].toJSON());
             }
         });
 

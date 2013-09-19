@@ -224,11 +224,22 @@ describe("Simple Tests", function() {
         expect(spy).toHaveBeenCalled();
     });
 
-    it("Should recursively call .toJSON", function() {
+    it("Should recursively call .toJSON for related fields", function() {
         var json = book.toJSON();
         expect(json.pages[0].number).toEqual(1);
 
         var emptyBook = new Book();
         expect(emptyBook.toJSON()).toEqual({});
+    });
+
+    it("Should work for fields whose values have no .toJSON", function() {
+        book.schema.keywords = {
+            type: 'list'
+        };
+        book.set({ keywords: ['javascript', 'backbone'] });
+
+        var json = book.toJSON();
+        expect(json.keywords.toJSON).not.toBeDefined();
+        expect(json.keywords).toBeInstanceOf(Array);
     });
 });
