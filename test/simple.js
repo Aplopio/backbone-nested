@@ -63,6 +63,22 @@ describe("Simple Tests", function() {
         expect(book.get('released_on')).toBe(undefined);
     });
 
+    it("Should retain the original value for related field provided with non-object value", function() {
+        var orig_val = book.get( 'author' );
+        book.set('author', 'Viky');
+        expect(book.get('author')).toBe(orig_val);
+    });
+
+    it("Should set the value as such when related field provided with non-object value and there is no previous value", function() {
+
+        book.schema.foreword_by = {
+            type: 'related',
+            _constructor: Person
+        };
+        book.set('foreword_by', 'Viky');
+        expect(book.get('foreword_by')).toBe('Viky');
+    });
+
     it("Should provide backwards references to the parent models", function() {
         expect(book.get('author').parent).toEqual(book);
         expect(book.get('pages').at(0).collection.parent).toEqual(book);

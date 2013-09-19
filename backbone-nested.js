@@ -91,6 +91,8 @@
                     return relation;
                 }
 
+                if(!_.isObject(val)) return val;
+
                 options._parent = this;
 
                 val = new schema._constructor(val, options);
