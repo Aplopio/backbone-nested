@@ -11,9 +11,14 @@
     var Model = Backbone.Model,
         Collection = Backbone.Collection;
 
+    // This is a function, so that it can be overridden in special cases
+    Backbone.Model.prototype._attrConstructor = function(schema) {
+        return schema._constructor;
+    };
+
     Backbone.Model.prototype.getParsedValue = function(attr, val, options) {
         var relation = this.attributes[attr],
-            schema,
+            schema, constructor,
             id = this.idAttribute || "id",
             modelToSet, modelsToAdd = [], modelsToRemove = [];
 
@@ -23,8 +28,9 @@
 
         if(this.schema && _.has(this.schema, attr)) {
             schema = this.schema[attr];
+            constructor = this._attrConstructor(schema);
 
-            if(schema.type == 'related' && _.isFunction(schema._constructor)) {
+            if(schema.type == 'related' && _.isFunction(constructor)) {
 
                 // If the relation already exists, we don't want to replace it, rather
                 // update the data within it whether it is a collection or model
@@ -94,18 +100,18 @@
 
                 else if(!_.isObject(val)) return val;
 
-                else if(val instanceof schema._constructor) {
+                else if(val instanceof constructor) {
                     return val;
                 }
                 else {
                     options._parent = this;
-                    val = new schema._constructor(val, options);
+                    val = new constructor(val, options);
                     val.parent = this;
                 }
             }
 
-            else if(_.isFunction(schema._constructor)) {
-                val = new schema._constructor(val);
+            else if(_.isFunction(constructor)) {
+                val = new constructor(val);
             }
 
         }
