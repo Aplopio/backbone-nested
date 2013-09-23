@@ -87,6 +87,7 @@
                 }
 
                 else if(relation && relation instanceof Model) {
+                    val = val.attributes || val;
                     relation.set(val);
                     return relation;
                 }

@@ -37,7 +37,6 @@ describe("Simple Tests", function() {
     });
 
     it("Should set the model relation for already constructed value", function() {
-        book.unset( 'author' );
         book.set({
             author: new Person({
                 name : "Viky",
