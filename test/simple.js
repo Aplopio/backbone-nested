@@ -47,6 +47,21 @@ describe("Simple Tests", function() {
         expect(book.get('author').get('name')).toEqual('Viky');
     });
 
+    it("Should trigger change when the value of model relation is changed", function() {
+        var spy = jasmine.createSpy();
+        book.on( 'change', spy );
+
+        book.set({
+            author: new Person({
+                id: 'new_id',
+                name : "Viky",
+                title: "UX engineer",
+                age  : 47
+            })
+        });
+        expect(spy).toHaveBeenCalled();
+    });
+
     it("Should build a collection relation", function() {
         expect(book.get('pages').length).toBe(2);
         expect(book.get('pages').at(0).get('number')).toBe(1);

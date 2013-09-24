@@ -93,7 +93,13 @@
                 }
 
                 else if(relation && relation instanceof Model) {
-                    val = val.attributes || val;
+                    if(val instanceof _constructor) {
+                        if(val.id != relation.id) {
+                            return val;
+                        } else {
+                            val = val.attributes;
+                        }
+                    }
                     relation.set(val);
                     return relation;
                 }
