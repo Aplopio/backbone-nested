@@ -163,7 +163,9 @@
             val = attrs[attr];
 
             // Inject in the relational lookup
-            val = this.getParsedValue(attr, val, options);
+            if(options.handle_relations !== false) {
+                val = this.getParsedValue(attr, val, options);
+            }
 
             if (!_.isEqual(current[attr], val)) changes.push(attr);
             if (!_.isEqual(prev[attr], val)) {
