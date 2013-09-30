@@ -60,7 +60,9 @@
 
                                 // Remove the model from the incoming list because all remaining models
                                 // will be added to the relation
-                                modelsToAdd.splice(i,1);
+                                modelsToAdd = _(modelsToAdd).reject(function(modelToAdd) {
+                                    return modelToAdd.id === model.id;
+                                });
                             } else {
                                 modelsToRemove.push(model);
                             }

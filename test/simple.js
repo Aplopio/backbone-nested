@@ -131,6 +131,33 @@ describe("Simple Tests", function() {
         expect(author.parent).not.toBeDefined();
     });
 
+    it("Should add new models into a relation which is a collection", function() {
+        book.get( 'pages' ).reset([
+            {
+                id: 1,
+                number: 3,
+                words: 600
+            }
+        ]);
+        expect(book.get('pages').length).toBe(1);
+
+        book.set({
+            pages: [
+                {
+                    id: 1,
+                    number: 10,
+                    words: 800
+                },
+                {
+                    id: 2,
+                    number: 4,
+                    words: 500
+                }
+            ]
+        });
+        expect(book.get('pages').length).toBe(2);
+    });
+
     it("Should merge new models into a relation which is a collection", function() {
         book.set({
           "pages": [
