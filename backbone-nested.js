@@ -56,7 +56,8 @@
                             });
 
                             if(rModel) {
-                                model.set(rModel.toJSON ? rModel.toJSON() : rModel);
+                                model !== rModel &&
+                                    model.set(rModel.toJSON ? rModel.toJSON() : rModel);
 
                                 // Remove the model from the incoming list because all remaining models
                                 // will be added to the relation
