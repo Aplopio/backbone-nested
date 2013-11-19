@@ -113,8 +113,7 @@
                     return val;
                 }
                 else {
-                    options._parent = this;
-                    val = new _constructor(val, options);
+                    val = new _constructor(val, _.defaults({ _parent: this }, options));
                     val.parent = this;
                 }
             }
